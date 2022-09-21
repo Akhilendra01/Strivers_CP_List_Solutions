@@ -1,33 +1,119 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-#define int long long int
-#define endl "\n"
+struct Node{
+	int data;
+	Node* next;
+};
 
-int32_t main(){
+struct LinkedList{
+	Node* head;
+	int length;
+	LinkedList(){
+		head=NULL;
+		length=0;
+	}
+	Node* createNode(int dat){
+		Node* p=(Node*)malloc(sizeof(Node));
+		p->data=dat;
+		p->next=NULL;
+		return p;
+	}
+	void insert(int dat){
+		length++;
+		Node* p=createNode(dat);
+		if(head==NULL){
+			head=p;
+			return;
+		}
 
-#ifndef ONLINE_JUDGE
+		Node* it=head;
+		while(it->next!=NULL)it=it->next;
+		it->next=p;
+	}
+	void insert(int dat, int idx){
+		if(idx>length+1){
+			cout<<"Out of bounds"<<endl;
+			return;
+		}
+		length++;
+		Node* p=createNode(dat);
+		if(idx==1){
+			p->next=head;
+			head=p;
+			return;
+		}
+		Node* it=head;
+		while(idx-->2)it=it->next;
+		p->next=it->next;
+		it->next=p;
+	}
+
+	void remove(int idx){
+		if(idx>this->length){
+			cout<<"Out of bounds"<<endl;
+			return;
+		}
+		length--;
+		if(idx==1){
+			Node *p=head;
+			head=head->next;
+			free(p);
+			return;
+		}
+		Node* it=head;
+		while(idx-->2)it=it->next;
+		Node *p=it->next;
+		it->next=p->next;
+		free(p);
+	}
+
+
+	Node* reverse(Node* head){
+		if(head->next==NULL)return head;
+		Node* newHead=reverse(head->next);
+		head->next->next=head;
+		head->next=NULL;
+		return newHead;
+	}
+
+	void display(){
+		Node* it=head;
+		while(it!=NULL){
+			cout<<it->data<<" ";
+			it=it->next;
+		}
+		cout<<endl;
+	}
+
+};
+
+
+
+int main(){
 	freopen("input.txt", "r", stdin);
 	freopen("output.txt", "w", stdout);
-#endif
-	ios_base::sync_with_stdio(false);
-    cin.tie(NULL); cout.tie(NULL);
 
-	int t; cin>>t;
-	while(t--){
-		int n; cin>>n;
-		string s; cin>>s;
-		int i=0, j=n-1;
-		while(s[i]!='1' and i<n)i++;
-		while(s[j]!='1' and j>=0)j--;
-		if(j==-1){
-			cout<<n<<endl;
-			continue;
-		}
-		int longestCycle=(j-i+1)*2;
-		
-		cout<<ans<<endl;
-	}
+	LinkedList ll;
+	ll.insert(1);
+	ll.insert(2);
+	ll.insert(3);
+	ll.insert(4);
+	ll.insert(5);
+	ll.insert(6);
 	
+	ll.insert(7);
+	ll.display();
+
+	ll.insert(69, 5);
+	ll.display();
+	ll.remove(1);
+	ll.display();
+	ll.insert(1, 1);
+	ll.display();
+
+	ll.head=ll.reverse(ll.head);
+	ll.display();
+
 	return 0;
 }
